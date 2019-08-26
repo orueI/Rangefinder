@@ -1,18 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:context=".MainActivity">
 
-
-    <Button
-            android:id="@+id/btnNewPoint"
+    <GridLayout
+            android:columnCount="2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Новая точка"/>
+            android:layout_height="wrap_content">
 
-</LinearLayout>
+        <TextView
+                android:id="@+id/textX0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        <TextView
+                android:id="@+id/textY0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+    </GridLayout>
+
+        <GridLayout
+                android:columnCount="2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:id="@+id/textAzimuth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            <TextView
+                    android:id="@+id/textPitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+        </GridLayout>
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:id="@+id/textLengthFull"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            <TextView
+                    android:id="@+id/textLength"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+    <GridLayout
+            android:columnCount="2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <TextView
+                android:id="@+id/textX1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        <TextView
+                android:id="@+id/textY1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+    </GridLayout>
+    <GridLayout
+            android:columnCount="2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <TextView
+                android:id="@+id/textAzimuthRunTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        <TextView
+                android:id="@+id/textPitchRunTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+    </GridLayout>
+
+        <Button
+                android:id="@+id/btnNewPoint"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Новая точка" />
+
+    </LinearLayout>

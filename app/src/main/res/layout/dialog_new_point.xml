@@ -9,33 +9,33 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_weight="1"
-            android:text="Растояние" />
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:text="Растояние" />
 
-    <EditText
-            android:id="@+id/editLength"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
-            android:layout_weight="10"
-            android:inputType="number" />
-</LinearLayout>
+        <EditText
+                android:id="@+id/editLength"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:layout_weight="10"
+                android:inputType="numberDecimal|numberSigned" />
+    </LinearLayout>
 
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_weight="1"
-            android:text="Значение X" />
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:text="Значение X" />
 
         <EditText
                 android:id="@+id/editX"
@@ -43,21 +43,21 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
                 android:layout_weight="10"
-                android:text="0"
-                android:inputType="number" />
-</LinearLayout>
+                android:inputType="numberDecimal|numberSigned"
+                android:text="0" />
+    </LinearLayout>
 
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_weight="1"
-            android:text="Значение Y" />
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:text="Значение Y" />
 
         <EditText
                 android:id="@+id/editY"
@@ -65,8 +65,32 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
                 android:layout_weight="10"
-android:text="0"
-                android:inputType="numberDecimal|numberSigned" />
-</LinearLayout>
+                android:inputType="numberDecimal|numberSigned"
+                android:text="0" />
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+        <Button
+                android:id="@+id/btnDialogReadAzimuth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+            android:text="Расчет азимута"
+            android:layout_weight="1"
+                android:background="#FAFAFA"/>
+
+        <Button
+                android:id="@+id/btnDialogCreateNewPoint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+            android:text="Cоздатьточку"
+            android:layout_weight="1"
+                android:background="#FAFAFA"/>
+
+
+    </LinearLayout>
 
 </LinearLayout>

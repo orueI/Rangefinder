@@ -21,63 +21,34 @@ import android.util.Log
 import kotlinx.android.synthetic.main.activity_main.*
 import android.view.LayoutInflater
 import android.widget.EditText
+import java.math.RoundingMode
+import java.text.DecimalFormat
 
 
-class MainActivity : AppCompatActivity(), View.OnClickListener, DialogInterface.OnClickListener {
+class MainActivity : AppCompatActivity(), View.OnClickListener,
+//    DialogInterface.OnClickListener,
+    ActivityCallBack {
+
+var sensor = false
     val FILE_NAME = "ListOfPoint"
-    lateinit var ad: AlertDialog
     lateinit var mHandler: Handler
-    val listAzimuth = LinkedList<Float>()
-    val listPitch = LinkedList<Float>()
-    val listRoll = LinkedList<Float>()
-    var lengthFull: Int = 0
-    var defX: Int = 0
-    var defY: Int = 0
+    var listAzimuth = ArrayList<Float>()
+    var listPitch = ArrayList<Float>()
+    var listRoll = ArrayList<Float>()
+    var lengthFull: Double = 0.0
+    var defX: Double = 0.0
+    var defY: Double = 0.0
     var fault = 0
     val listPoint = ArrayList<Point>()
-    lateinit var mSettings: SharedPreferences
-    lateinit var promptsView: View
-    lateinit var editLengthLocal: EditText
-    lateinit var editXLocal: EditText
-    lateinit var editYLocal: EditText
+    //    lateinit var mSettings: SharedPreferences
+    lateinit var controller: MenuInterface
+    lateinit var sensorManager: SensorManager
 
 
 //    private var dialogSetting: View
 
     override fun onClick(v: View?) {
-        when(v?.id){
-            R.id.btnNewPoint->{
-                val li = LayoutInflater.from(this)
-                promptsView = li.inflate(R.layout.dialog_new_point, null)
-
-                val adBilder = AlertDialog.Builder(this)
-                adBilder
-                    .setCancelable(false)
-                    .setPositiveButton("Ok", this)
-                adBilder.setTitle("Новая точка")
-                adBilder.setView(promptsView)
-                editLengthLocal = promptsView.findViewById(R.id.editLength) as EditText
-                editXLocal = promptsView.findViewById(R.id.editX) as EditText
-                editYLocal = promptsView.findViewById(R.id.editY) as EditText
-
-                ad = adBilder.create()
-
-                when (v?.id) {
-//            R.id.btnSetting -> showADialog("btnSetting")
-                    R.id.btnNewPoint -> showADialog("btnNewPoint")
-//            R.id.btnNewBranch -> showADialog("btnNewBranch")
-                }
-
-
-            }
-//            R.id.btnSave->{
-//                val builder = GsonBuilder()
-//                val gson = builder.create()
-//
-//                generateNoteOnSD(FILE_NAME, gson.toJson(listPoint))
-//            }
-        }
-
+        controller.onClickMenuBtnCreateNewPoint(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -88,30 +59,25 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, DialogInterface.
 //        btnNewBranch.setOnClickListener(this)
         btnNewPoint.setOnClickListener(this)
 
+        controller = Controller(this, this)
 
+        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        val defPressureSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION)
+        sensorManager.registerListener(
+            workingSensorEventListener,
+            defPressureSensor,
+            SensorManager.SENSOR_DELAY_UI
+        )
     }
 
-    fun showADialog(s: String) {
-        when (s) {
-//            "btnSetting" -> {
-//                adBilder.setTitle("Настройки")
-//                adBilder.setView(R.layout.alert_dialog)
-//            }
-            "btnNewPoint" -> {
-                registrationSensorListener()
-                ad.show()
-            }
-//            "btnNewBranch" -> {
-//                adBilder.setTitle("Новая ветка")
-//                adBilder.setView(R.layout.dialog_new_point)
-//
-//                registrationSensorListener()
-//            }
-        }
+    override fun setLength(length: Double, x0: Double, y0: Double) {
+        lengthFull = length
+        defX = x0
+        defY = y0
     }
 
-    private fun registrationSensorListener() {
-        val sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+    fun regListener() {
+        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         val defPressureSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION)
         sensorManager.registerListener(
             workingSensorEventListener,
@@ -126,32 +92,33 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, DialogInterface.
                 sensorManager.unregisterListener(
                     workingSensorEventListener
                 )
+                controller.azimuthRead()
+//                calculate()
+
             }
         }
 
-        mHandler.sendEmptyMessage(1000)
-
+//        mHandler.postDelayed(1000)
     }
 
+    override fun registrationSensorListener(){
+        sensor = true
+//        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+//        val defPressureSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION)
+//        sensorManager.registerListener(
+//            workingSensorEventListener,
+//            defPressureSensor,
+//            SensorManager.SENSOR_DELAY_UI
+//        )
+//        val handler = Handler()
+//        val timeUpdaterRunnable = Runnable{
+//            sensorManager.unregisterListener(
+//                workingSensorEventListener
+//            )
+//            controller.azimuthRead()
 
-    override fun onClick(dialog: DialogInterface?, which: Int) {
-
-//            var s = "0"
-//            var sX = "0"
-//            var sY = "0"
-//            if (editLengthLocal!= null){
-        lengthFull = editLengthLocal.text.toString().toInt()
-        defX = editXLocal.text.toString().toInt()
-        defY = editYLocal.text.toString().toInt()
-//        defX = editXLocal.text.
-//            }
-//             = s.toInt()
-
-        //            if (editFault!= null)
-//            fault = editFault.textAlignment
-
-        dialog?.cancel()
-        calculate()
+//        }
+//        handler.postDelayed(timeUpdaterRunnable,1000)
     }
 
     val workingSensorEventListener = object : SensorEventListener {
@@ -159,17 +126,29 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, DialogInterface.
         override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
 
         override fun onSensorChanged(event: SensorEvent) {
-            listAzimuth.add(event.values[0])
-            listPitch.add(event.values[1])
-            listRoll.add(event.values[2])
-            Log.v("MyTag", "Azimuth ${event.values[0].toString()}")
-            Log.v("MyTag", "Pitch ${event.values[1].toString()}")
-            Log.v("MyTag", "Roll ${event.values[2].toString()}")
+
+            val df = DecimalFormat("#.##")
+            df.roundingMode = RoundingMode.CEILING
+            textAzimuthRunTime.text     = " Azimuth = ${df.format(event.values[0].toDouble())}"
+            textPitchRunTime.text         = " Pitch = ${df.format(event.values[1].toDouble())}"
+//            textRollRunTime.text           = " Roll = ${event.values[2].toString()}"
+            if(sensor) {
+                listAzimuth.add(event.values[0])
+                listPitch.add(event.values[1])
+                listRoll.add(event.values[2])
+//             averageAzimuth    = event.values[0]
+//             averagePitch      = event.values[1]
+//             averageRoll       = event.values[2]
+                Log.v("MyTag", "Azimuth ${event.values[0].toString()}")
+                Log.v("MyTag", "Pitch   ${event.values[1].toString()}")
+                Log.v("MyTag", "Roll    ${event.values[2].toString()}")
+                controller.azimuthRead()
+               sensor = false
+            }
         }
     }
 
-
-    fun calculate() {
+    override fun calculate() {
 
         var averageAzimuth = 0f
         var averagePitch = 0f
@@ -188,45 +167,76 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, DialogInterface.
 //                listPitch.map { averagePitch + it }
 //                listRoll.map { averageRoll + it }
 
-        averageAzimuth /= listAzimuth.size
-        averagePitch /= listPitch.size
-        averageRoll /= listRoll.size
+        averageAzimuth  = listAzimuth [0]     //.size-1
+        averagePitch    = listPitch   [0]     //.size-1
+        averageRoll     = listRoll    [0]     //.size-1
+
+        listAzimuth    = ArrayList()
+        listPitch      = ArrayList()
+        listRoll       = ArrayList()
 
         val length = cos(Math.toRadians(averagePitch.toDouble())) * lengthFull
         val deltaX = cos(Math.toRadians(averageAzimuth.toDouble())) * length
         val deltaY = sin(Math.toRadians(averageAzimuth.toDouble())) * length
-if (defX!=0&&defY!=0){
-    val p = Point(
-        defX + deltaX,
-        defY + deltaY,
-        lengthFull,
-        averageAzimuth,
-        averagePitch,
-        averageRoll
-    )
-    listPoint.add(p)
-}else if (defX==0&&defY==0){
-    if (listPoint.size == 0) {
-        val p = Point(deltaX, deltaY, lengthFull, averageAzimuth, averagePitch, averageRoll)
-        listPoint.add(p)
+        if (defX != 0.0 && defY != 0.0) {
+            val p = Point(
+                defX,
+                defY,
+                defX + deltaX,
+                defY + deltaY,
+                lengthFull,
+                averageAzimuth,
+                averagePitch,
+                averageRoll
+            )
+            listPoint.add(p)
+        } else if (defX == 0.0 && defY == 0.0) {
+            if (listPoint.size == 0) {
+                val p = Point(
+                    0.0,
+                    0.0,
+                    deltaX,
+                    deltaY,
+                    lengthFull,
+                    averageAzimuth,
+                    averagePitch,
+                    averageRoll
+                )
+                listPoint.add(p)
 
-    } else {
-        val p = Point(
-            listPoint[listPoint.size - 1].x + deltaX,
-            listPoint[listPoint.size - 1].y + deltaY,
-            lengthFull,
-            averageAzimuth,
-            averagePitch,
-            averageRoll
-        )
-        listPoint.add(p)
+            } else {
+                val p = Point(
+                    listPoint[listPoint.size - 1].x1,
+                    listPoint[listPoint.size - 1].y1,
+                    listPoint[listPoint.size - 1].x0 + deltaX,
+                    listPoint[listPoint.size - 1].y0 + deltaY,
+                    lengthFull,
+                    averageAzimuth,
+                    averagePitch,
+                    averageRoll
+                )
+                listPoint.add(p)
+            }
+        }
+
+        val df = DecimalFormat("#.##")
+        df.roundingMode = RoundingMode.CEILING
+//        df.format(d)
+
+        textX0.text = " X0 = ${df.format(listPoint[listPoint.size - 1].x0)} "
+        textY0.text = " Y0 = ${df.format(listPoint[listPoint.size - 1].y0)}"
+        textX1.text = " X1 = ${df.format(listPoint[listPoint.size - 1].x1)} "
+        textY1.text = " Y1 = ${df.format(listPoint[listPoint.size - 1].y1)}"
+        textLength.text = " Length = ${length}"
+        textLength.text = " Length input = ${df.format(listPoint[listPoint.size - 1].lengthFull)}"
+        textAzimuth.text = " Azimuth = ${df.format(listPoint[listPoint.size - 1].azimuth)}"
+        textPitch.text = " Pitch = ${df.format(listPoint[listPoint.size - 1].Pitch)}"
+
     }
-}
 
-    }
+    override fun onStop() {
+        super.onStop()
 
-    override fun onDestroy() {
-        super.onDestroy()
         val builder = GsonBuilder()
         val gson = builder.create()
 
