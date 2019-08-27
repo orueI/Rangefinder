@@ -14,7 +14,7 @@ class DialogNewPoint {
     private lateinit var editLengthLocal: EditText
     private lateinit var editXLocal: EditText
     private lateinit var editYLocal: EditText
-    private lateinit var btnReadAzimuth: Button
+//    private lateinit var btnReadAzimuth: Button
     private lateinit var btnCreateNewPoint: Button
     private lateinit var ad: AlertDialog
     private lateinit var adBilder: AlertDialog.Builder
@@ -45,9 +45,9 @@ class DialogNewPoint {
     }
 
     private fun setListener() {
-        btnReadAzimuth.setOnClickListener {
-            callBack.onClickDialogBtnReadAzimuth()
-        }
+//        btnReadAzimuth.setOnClickListener {
+//            callBack.onClickDialogBtnReadAzimuth()
+//        }
         btnCreateNewPoint.setOnClickListener {
             ad.cancel()
             sendLength()
@@ -67,7 +67,7 @@ class DialogNewPoint {
         editLengthLocal = promptsView.findViewById(R.id.editLength) as EditText
         editXLocal = promptsView.findViewById(R.id.editX) as EditText
         editYLocal = promptsView.findViewById(R.id.editY) as EditText
-        btnReadAzimuth = promptsView.findViewById(R.id.btnDialogReadAzimuth) as Button
+//        btnReadAzimuth = promptsView.findViewById(R.id.btnDialogReadAzimuth) as Button
         btnCreateNewPoint = promptsView.findViewById(R.id.btnDialogCreateNewPoint) as Button
     }
 
@@ -78,21 +78,21 @@ class DialogNewPoint {
     }
 
     fun btnCreateNewPointClickable() {
-        btnCreateNewPoint.clickable()
-        btnCreateNewPoint.setTextColor(btnReadAzimuth.textColors)
+//        btnCreateNewPoint.clickable()
+//        btnCreateNewPoint.setTextColor(btnReadAzimuth.textColors)
     }
 
 }
 
 @SuppressLint("ResourceAsColor")
 private fun Button.notClickable() {
-    this.setTextColor(R.color.colorNotClickable)
-    this.isClickable = false
+//    this.setTextColor(R.color.colorNotClickable)
+//    this.isClickable = false
 }
 
 private fun Button.clickable() {
 //    this.setTextColor()
-    this.isClickable = true
+//    this.isClickable = true
 
 
 }

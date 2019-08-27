@@ -27,6 +27,8 @@ class Controller : DialogInterfase, MenuInterface {
 
     override fun onClickMenuBtnCreateNewPoint(context: Context) {
         dialog.showDialog(context)
+        dialog.btnCreateNewPointClickable()
+
     }
 
     override fun azimuthRead() {

@@ -74,13 +74,13 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-        <Button
-                android:id="@+id/btnDialogReadAzimuth"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-            android:text="Расчет азимута"
-            android:layout_weight="1"
-                android:background="#FAFAFA"/>
+<!--        <Button-->
+<!--                android:id="@+id/btnDialogReadAzimuth"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--            android:text="Расчет азимута"-->
+<!--            android:layout_weight="1"-->
+<!--                android:background="#FAFAFA"/>-->
 
         <Button
                 android:id="@+id/btnDialogCreateNewPoint"
