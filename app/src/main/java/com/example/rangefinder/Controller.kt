@@ -39,6 +39,7 @@ class Controller : DialogInterfase, MenuInterface {
     }
 
     override fun azimuthRead() {
+
         dialog.btnCreateNewPointClickable()
     }
 
