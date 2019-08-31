@@ -148,76 +148,55 @@ var sensor = false
         }
     }
 
-    override fun calculate() {
+
+
+
+
+   override fun calculate() {
 
         var averageAzimuth = 0f
         var averagePitch = 0f
         var averageRoll = 0f
 
+       val calculater = Calculater()
+
 //                listAzimuth.map { averageAzimuth += it }
-        for (i in listAzimuth) {
-            averageAzimuth += i
-        }
-        for (i in listPitch) {
-            averagePitch += i
-        }
-        for (i in listRoll) {
-            averageRoll += i
-        }
+//        for (i in listAzimuth) {
+//            averageAzimuth += i
+//        }
+//        for (i in listPitch) {
+//            averagePitch += i
+//        }
+//        for (i in listRoll) {
+//            averageRoll += i
+//        }
 //                listPitch.map { averagePitch + it }
 //                listRoll.map { averageRoll + it }
 
-        averageAzimuth  = listAzimuth [0]     //.size-1
-        averagePitch    = listPitch   [0]     //.size-1
-        averageRoll     = listRoll    [0]     //.size-1
+        val triple = calculater.calculateAzimuth(averageAzimuth, averagePitch, averageRoll,listAzimuth,listPitch,listRoll)
 
-        listAzimuth    = ArrayList()
-        listPitch      = ArrayList()
-        listRoll       = ArrayList()
+        averageAzimuth = triple.first
+        averagePitch = triple.second
+        averageRoll = triple.third
 
-        val length = cos(Math.toRadians(averagePitch.toDouble())) * lengthFull
-        val deltaX = cos(Math.toRadians(averageAzimuth.toDouble())) * length
-        val deltaY = sin(Math.toRadians(averageAzimuth.toDouble())) * length
-        if (defX != 0.0 && defY != 0.0) {
-            val p = Point(
-                defX,
-                defY,
-                defX + deltaX,
-                defY + deltaY,
-                lengthFull,
-                averageAzimuth,
-                averagePitch,
-                averageRoll
-            )
-            listPoint.add(p)
-        } else if (defX == 0.0 && defY == 0.0) {
-            if (listPoint.size == 0) {
-                val p = Point(
-                    0.0,
-                    0.0,
-                    deltaX,
-                    deltaY,
-                    lengthFull,
-                    averageAzimuth,
-                    averagePitch,
-                    averageRoll
-                )
-                listPoint.add(p)
-
-            } else {
-                val p = Point(
-                    listPoint[listPoint.size - 1].x1,
-                    listPoint[listPoint.size - 1].y1,
-                    listPoint[listPoint.size - 1].x0 + deltaX,
-                    listPoint[listPoint.size - 1].y0 + deltaY,
-                    lengthFull,
-                    averageAzimuth,
-                    averagePitch,
-                    averageRoll
-                )
-                listPoint.add(p)
-            }
+        if (defX==0.0 && defY == 0.0 && listPoint.size!=0){
+            defX=listPoint.last().x1
+            defY=listPoint.last().y1
         }
+
+        val (length, deltaX, deltaY) = calculater.calculateNewCoordinates(averagePitch, averageAzimuth,lengthFull)
+        val p = Point(
+            defX,
+            defY,
+            defX + deltaX,
+            defY + deltaY,
+            lengthFull,
+            averageAzimuth,
+            averagePitch,
+            averageRoll
+        )
+        listPoint.add(p)
+
 
         val df = DecimalFormat("#.##")
         df.roundingMode = RoundingMode.CEILING
@@ -233,6 +212,7 @@ var sensor = false
         textPitch.text = " Pitch = ${df.format(listPoint[listPoint.size - 1].Pitch)}"
 
     }
+
 
     override fun onStop() {
         super.onStop()
